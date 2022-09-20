@@ -235,8 +235,8 @@
 			"\tFWT.Copy(); FWT.And(FWT.a, 1); FWT.And(FWT.b, 1); FWT.Mul(); FWT.And(FWT.a, -1); FWT.Print();",
 			"\tFWT.Copy(); FWT.Xor(FWT.a, 1); FWT.Xor(FWT.b, 1); FWT.Mul(); FWT.Xor(FWT.a, FWT.Fpow(2, P - 2)); FWT.Print();",
 			"\treturn 0;",
-			"}",
-		],
+			"}"
+		]
 	},
 	"MODINT": {
 		"prefix": "modint",
@@ -264,15 +264,15 @@
 			"\t\t\tfinv[i] = Mul(finv[i - 1], inv[i]);",
 			"\t\t} return void();",
 			"\t}",
-			"}",
-		],
+			"}"
+		]
 	},
 	"RandomSeed": {
 		"prefix": "SetRand",
 		"body": [
 			"std::mt19937 builder(std::chrono::system_clock::now().time_since_epoch().count());",
 			"std::uniform_int_distribution<int> random(Llimit, Rlimit);"
-		],
+		]
 	},
 	"Exkmp(Z-algorithm)": {
 		"prefix": "Exkmp",
@@ -300,5 +300,5 @@
             "\t}",
             "};"
 		]
-	},	
+	}
 }
