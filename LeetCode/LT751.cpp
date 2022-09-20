@@ -7,7 +7,7 @@ public:
         for (; y; y >>= 1, x *= x) if (y & 1) ans *= x;
         return ans;
     }
-
+    std::size_t;
     std::string crackSafe(int n, int k) {
         int sn = qpow(k, n), fn = qpow(k, n - 1);
         std::vector<int> a(fn, k - 1);
