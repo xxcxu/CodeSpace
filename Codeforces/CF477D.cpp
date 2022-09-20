@@ -1,64 +1,49 @@
-#include<bits/stdc++.h>
-using namespace std;
-#define ll long long
-#define double long double
-const int N=5005,mod=1e9+7,inf=0x3f3f3f3f;
+#include <bits/stdc++.h>
+static constexpr int N = 5e3 + 5, inf = 0x3f3f3f3f, P = 1e9 + 7;
+int n, ans = inf;
+int lcp[N][N], f[N][N], sum[N][N], pre[N][N];
 char s[N];
-int n,pw[N],val[N],f[N][N],mg[N][N],g[N][N],lcp[N][N];
-int ask(int l,int r){return (val[r]-1ll*val[l-1]*pw[r-l+1]%mod+mod)%mod;}
-bool check(int p,int q,int len){
-	int sp=p-len+1,sq=q-len+1,ans=0;
-	ans=lcp[sp][sq];
-	if(ans>=len)return true;
-	return s[sp+ans]<s[sq+ans];
+bool check(int l1, int r1, int l2, int r2) {
+	int len1 = r1 - l1 + 1, len2 = r2 - l2 + 1;
+	if (len1 != len2) return len1 < len2;
+	if (l1 + lcp[l1][l2] > r1)return 1;
+	return s[l1 + lcp[l1][l2]] < s[l2 + lcp[l1][l2]];
 }
-signed main(){
-	cin>>s+1;n=strlen(s+1);pw[0]=1;
-	for(int i=1;i<=n;i++)pw[i]=pw[i-1]*2%mod;
-	for(int i=1;i<=n;i++)val[i]=(val[i-1]*2%mod+(s[i]-'0'))%mod;
-	for(int i=n;i>=1;i--)
-		for(int j=n;j>=1;j--) 
-			if(s[i]==s[j])lcp[i][j]=lcp[i+1][j+1]+1;
-			else lcp[i][j]=0; 
-	for(int i=1;i<=n;i++){
-		for(int j=1;j<=i;j++){
-			if(j==1){f[i][j]=1;g[i][j]=1;continue;}
-			if(s[j]=='0'){f[i][j]=f[i][j-1];g[i][j]=inf;continue;}
-			int l=i-j+1;
-			f[i][j]=(f[i][j]+f[j-1][j-1]-f[j-1][max(j-l,0)]+mod)%mod;
-			g[i][j]=mg[j-1][min(max(j-l+1,1),j-1)]+1;
-			if(j-1>=l&&s[j-l]!='0'&&check(j-1,i,l)){
-				f[i][j]=((ll)f[i][j]+f[j-1][j-l]-f[j-1][j-l-1]+mod)%mod;
-				g[i][j]=min(g[i][j],g[j-1][j-l]+1);
+auto main() -> decltype(0) {
+	std::memset(pre, 0x3f, sizeof pre);
+	std::memset(f, 0x3f, sizeof f);
+	scanf("%s", s + 1);
+	int n = strlen(s + 1);
+	for (int i = n; i; --i)
+		for (int j = n; j; --j)
+			if (s[i] == s[j])
+				lcp[i][j] = lcp[i + 1][j + 1] + 1;
+			else
+				lcp[i][j] = 0;
+	for (int r = 1; r <= n; ++r) {
+		for (int l = r, k = l - 1; l; --l) {
+			int t = 0;
+			if (l == 1) f[l][r] = t = 1;
+			else {
+				while (k > 1 && check(k - 1, l - 1, l, r)) -- k;
+				if (s[l] == '1')
+					t = sum[k][l - 1], f[l][r] = std::min(pre[k][l - 1] + 1, inf);
 			}
-			f[i][j]=(f[i][j-1]+f[i][j])%mod;
+			sum[l][r] = (sum[l + 1][r] + t) % P;
+			pre[l][r] = std::min(pre[l + 1][r], f[l][r]);
 		}
-		mg[i][i]=g[i][i];
-		for(int j=i-1;j>=1;j--)mg[i][j]=min(mg[i][j+1],g[i][j]);
 	}
-	printf("%d\n",f[n][n]);
-	double sum=1e20;int ans=0;
-	for(int i=1;i<=n;i++){
-		if((f[n][i]-f[n][i-1]+mod)%mod==0)continue;
-		int cnt=g[n][i];
-		double gr=0,p=1;
-		for(int j=i;j<=n;j++,p*=0.5)
-			if(s[j]=='1')gr=gr+p;
-		double cur=log10(gr)+log10(2)*(n-i+1);
-		if(n-i+1<=30)cur=cur+log10((double)cnt/(gr*(1<<n-i))+1);
-		if(cur<sum)sum=cur,ans=(ask(i,n)+cnt)%mod;
-	} 
-	printf("%d\n",ans);
+	int t = 1, cur = 0;
+	for (int i = n; i; t = (t << 1) % P, --i) {
+		cur = (cur + t * (s[i] - '0') % P) % P;
+		if (f[i][n] < inf) {
+			if (n - i < 27) ans = std::min(ans, (cur + f[i][n]) % P);
+			else {
+				if (ans == inf) ans = (cur + f[i][n]) % P;
+				break;
+			}
+		}
+	}
+	printf("%d\n%d\n", sum[1][n], ans);
+	return 0;
 }
-/*
-大致思路：
-我们维护两个dp方程
-f[i][j]表示到了第i个点，[j,i]分成一段的方案数
-g[i][j]表示到了第i个点，[j,i]分成一段的最少分段数
-对f[i][j]维护前缀和，g[i][j]维护后缀min，方便转移 
-第一问很简单,f[n][n]
-对于第二问，答案就是k+v,v就是最后一段的值，k就是分段数
-我们发现2^17>5000，k 最多就是5000
-所以最后一段分在n-16之前一定不优，因为v增加的超过了k的最大值
-不过实现是直接用log+long double比较
-*/
