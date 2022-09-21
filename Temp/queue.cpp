@@ -22,7 +22,7 @@ class SegmentTree {
         Build(ls, l, mid); Build(rs, mid + 1, r);
         return Pushup(rt);
     }
-    public: auto Update(int rt, int l, int r) {
+    public: auto Update(int rt, int l, int r) -> void {
         if (l <= tr[rt].l && tr[rt].r <= r) return Pushtag(rt, -1);
         Pushdown(rt);
         int mid = (tr[rt].l + tr[rt].r) >> 1;
@@ -45,8 +45,8 @@ class SegmentTree2 {
     #define ls (rt << 1)
     #define rs (rt << 1 | 1)
     private: class TreeNode {public: int val, l, r;} tr[N << 2];
-    private: auto Pushup(int rt) {tr[rt].val = tr[ls].val + tr[rs].val;}
-    public: auto Build(int rt, int l, int r) {
+    private: auto Pushup(int rt) -> void {tr[rt].val = tr[ls].val + tr[rs].val;}
+    public: auto Build(int rt, int l, int r) -> void {
         tr[rt].val = 0, tr[rt].l = l, tr[rt].r = r;
         if (l == r) return void(tr[rt].val = 0);
         int mid = (l + r) >> 1;
