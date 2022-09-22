@@ -356,7 +356,7 @@
 			"namespace Codespace {",
 			"    function Clear() -> void {}",
 			"    function Solver(int test_case = 0) -> void {",
-			"        ",
+			"        $1",
 			"    }",
 			"}",
 			"function main(int argv, char *argc[]) -> decltype(0) {",
