@@ -1,7 +1,12 @@
 #include <bits/stdc++.h>
+using pii = std::pair<int, int>;
 static constexpr int N = 4e5 + 5;
 int n;
-class SegmentTree {
+// 第i个点初值为i 
+// 记录区间最大值
+// 支持区间-1 
+// 支持查找最左边的>=v的位置 
+class SegmentTree { 
     #define ls (rt << 1)
     #define rs (rt << 1 | 1)
     private: class TreeNode {public: int val, l, r, lazy;} tr[N << 2];
@@ -41,7 +46,11 @@ class SegmentTree {
     #undef ls
     #undef rs
 } TT;
-class SegmentTree2 {
+// 初值均为0 
+// 线段树节点维护这个区间有几个数已经插入 
+// 支持单点插入 
+// 支持查询区间插入的数的个数 查询从右往左第v个数
+class SegmentTree2 { 
     #define ls (rt << 1)
     #define rs (rt << 1 | 1)
     private: class TreeNode {public: int val, l, r;} tr[N << 2];
@@ -75,52 +84,47 @@ class SegmentTree2 {
     #undef ls
     #undef rs
 } T;
-
-struct BLOCK
-{
-    vector<pii>vt;
-    void add(int x,int y){vt.pb(mk(x,min((int)vt.size()+1,y)));}
-    vector<int> query()
-    {
-        int n=vt.size();
-        vector<int>p(n+1);
-        reverse(vt.begin(),vt.end());
-        TT.build(1,1,n);
-        for(auto [x,y]:vt)
-        {
-            int pos=TT.ask(1,y);p[pos]=x;
-            TT.add(1,pos,n);
+class Block {
+    public: std::vector<pii> vec;
+    public: auto Update(int x, int y) -> void {
+        vec.emplace_back(x, std::min((int)vec.size() + 1, y));
+        // 插在y位置或者末尾
+    }
+    public: auto Query() -> std::vector<int> {
+        int n = vec.size();
+        std::vector<int> p;
+        p.resize(n + 1);
+        std::reverse(vec.begin(), vec.end());
+        // 考虑从后往前做
+        TT.Build(1, 1, n);
+        for (auto [x, y] : vec) {
+            int pos = TT.Query(1, y); // 求出当前这个数可以排到的位置（最多插y个人）
+            p[pos] = x; // 固定位置
+            TT.Update(1, pos, n); // 对当前位置到末尾 -1
         }
-        for(int i=n;i>=1;i--)printf("%d ",p[i]);
+        for (int i = n; ~i; --i) if (p[i]) printf("%d ", p[i]); // 输出
         return p;
     }
-}a[N];
+} a[N];
 int cnt;
-vector<int>bel[N];
-int solve(int c,int v)
-{
-    int num=T.ask(1,v);
-    if(bel[c].empty()||bel[c].back()<num)return ++cnt;
-    return *lower_bound(bel[c].begin(),bel[c].end(),num);
+std::vector<int>bel[N];
+auto Solve(int x, int v) -> int {
+    int y = T.Query(1, v); // 查询 1-v这里有几个连续段
+    if (bel[x].empty() || bel[x].back() < y) return ++ cnt; // 如果说我这个组没有人 或者距离我太远 新增一个连续段
+    return *std::lower_bound(bel[x].begin(), bel[x].end(), y); // 查找我能到的最前面的连续段
 }
-signed main()
-{
-    freopen("queue.in","r",stdin);
-    freopen("queue.out","w",stdout);
-    scanf("%d",&n);
-    T.build(1,1,n);
-    for(int i=1,c,v;i<=n;i++)
-    {
-        scanf("%d%d",&c,&v);
-        int p=solve(c,v);
-        if(bel[c].empty()||bel[c].back()<p)bel[c].pb(p);
-        T.insert(1,p);
-        // cout<<p<<endl;
-        a[p].add(i,v-T.ask(1,p+1,cnt)+1);
+auto main() -> decltype(0) {
+    freopen("queue.in", "r", stdin);
+    freopen("queue.out", "w", stdout);
+    scanf("%d", &n);
+    T.Build(1, 1, n);
+    for (int i = 1, x, v; i <= n; ++i) {
+        scanf("%d%d", &x, &v);
+        int p = Solve(x, v); // 获取连续段编号
+        if (bel[x].empty() || bel[x].back() < p) bel[x].emplace_back(p); // 新增连续段
+        T.Insert(1, p); // 插入这个连续段
+        a[p].Update(i, v - T.Query(1, p + 1, cnt) + 1);   
     }
-    for(int i=1;i<=cnt;i++)
-    {
-        a[i].query();
-    }
+    for (int i = 1; i <= cnt; ++i) a[i].Query();
     return 0;
-}t
+}
