@@ -94,7 +94,7 @@ class Block {
         int n = vec.size();
         std::vector<int> p;
         p.resize(n + 1);
-        std::reverse(vec.begin(), vec.end());
+        std::reverse(vec.begin(), vec.end());      
         // 考虑从后往前做
         TT.Build(1, 1, n);
         for (auto [x, y] : vec) {

@@ -35,8 +35,6 @@
         "**/.vscode",
         "**/.vscode/**"
     ],
-    "files.exclude": {
-        "Codeforces": false
-    },
-    "workspace.isHidden": false
+    "files.exclude": {},
+    "workspace.isHidden": true
 }
