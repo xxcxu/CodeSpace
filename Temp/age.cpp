@@ -128,6 +128,7 @@ namespace Codespace {
             bool ok = true;
             for (ll p = 1; ok && p < y && p > 0; p *= i) {
                 if ((y / p) % i > 9) ok = false;
+                if ((y / p) % i < 0) ok = false;
                 ld np = (ld)p * i;
                 if (np > (ld)y - eps) break; 
             }
@@ -151,7 +152,7 @@ function main(int argv, char *argc[]) -> decltype(0) {
         isdebug = true;
     #endif
     int T, Case = 0;
-    if (isfreopen) freopenI("age.in"), freopenO("age.out");
+    if (isfreopen) freopenI("age"), freopenO("age");
     if (ismultiple) read(T); else T = 1;
     while (T--) Codespace::Solver(++ Case);
     return 0;

@@ -75,20 +75,19 @@ using namespace IO::OutputStream;
 using ll = long long;
 namespace Codespace {
     static constexpr int N = 1e3 + 5;
-    int n, m, cnt, sum, col[N], rol[N];
-    ll s, c;
+    int n, m, cnt, col[N], rol[N];
+    ll s, c, sum;
     char map[N][N];
     function Solver(int test_case = 0) -> void {
         std::memset(col, 0, sizeof col);
         std::memset(rol, 0, sizeof rol);
-        read(n, m); cnt = 0;
+        read(n, m); cnt = 0; sum = 0;
         for (int i = 1; i <= n; ++i) {
             scanf("%s", map[i] + 1);
             for (int j = 1; j <= m; ++j)
                 if (map[i][j] == 'G') col[i] = j, rol[j] = i;
                 else ++ cnt;
         }
-        sum = 0;
         s = 0, c = 0;
         for (int i = 1; i <= n; ++i) {
             ll cur = m - (bool)col[i];
@@ -103,6 +102,7 @@ namespace Codespace {
         }
         for (int i = 1; i <= n; ++i) if (col[i]) sum += 2ll * (col[i] - 1) * (m - col[i]);
         for (int i = 1; i <= m; ++i) if (rol[i]) sum += 2ll * (rol[i] - 1) * (n - rol[i]);
+        
         for (int s = 0; s < 2; ++s) {
             ll ss = 0;
             for (int i = 1; i <= n; ++i) {
@@ -124,9 +124,9 @@ namespace Codespace {
                     ss = 0;
                 ss += (s ? rol[i] - 1 : n - rol[i]) * 2ll;
             }
-        }
-        sum *= 2;
-        write(1.0 * sum / cnt / cnt, '\n');
+        }   
+        sum = sum * 2;
+        printf("%.4lf\n", 1.0 * sum / cnt / cnt);
     }
 }
 function main(int argv, char *argc[]) -> decltype(0) {
@@ -144,8 +144,20 @@ function main(int argv, char *argc[]) -> decltype(0) {
         isdebug = true;
     #endif
     int T, Case = 0;
-    if (isfreopen) freopenI("chess"), freopenO("chess");
+    // if (isfreopen) freopenI("chess"), freopenO("chess");
     if (ismultiple) read(T); else T = 1;
     while (T--) Codespace::Solver(++ Case);
     return 0;
 }
+/*
+1
+4 4
+G###
+###G
+####
+#G##
+
+(1,2) 33
+(1,3) 32
+(1,4) 
+*/

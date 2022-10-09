@@ -79,6 +79,7 @@ namespace Codespace {
     function Solve(ll a, ll b) -> ll {
     	if (a == 0) return 0;
         if (b == 0) return 0;
+        if (b == 1) return a;
     	if (a > b) return a / b + Solve(a % b, b);
     	else if (a == b) return 1;
     	else if (a < b) return b / a + Solve(a, b % a);
@@ -106,7 +107,7 @@ function main(int argv, char *argc[]) -> decltype(0) {
         isdebug = true;
     #endif
     int T, Case = 0;
-    // if (isfreopen) freopenI("r.in"), freopenO("r.out");
+    if (isfreopen) freopenI("r"), freopenO("r");
     if (ismultiple) read(T); else T = 1;
     while (T--) Codespace::Solver(++ Case);
     return 0;
