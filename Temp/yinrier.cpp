@@ -79,11 +79,12 @@ void solve() {
     for (int i = 1; i <= n; ++i) a[i] = std::lower_bound(e + 1, e + L + 1, a[i]) - e;
     for (int i = 1; i <= m; ++i) b[i] = std::lower_bound(e + 1, e + L + 1, b[i]) - e;
     puts(check() ? "YES" : "NO");
-}
+}   
 
-signed main() {
+
+                                                                                                                                      signed main() {
     freopen("yinrier.in", "r", stdin);
-    freopen("yinrier.out", "w", stdout);
+    freopen("yinrier.out",  "w", stdout);
     int t; scanf("%d", &t);
     while (t--) solve();
 }
