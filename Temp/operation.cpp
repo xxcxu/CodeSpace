@@ -80,8 +80,9 @@ namespace Codespace {
 		read(n, k); ans = 1;
 		for (int i = 1; i <= n; ++i) read(a[i]), c[a[i]] = i;
 		for (int i = 1; i <= k; ++i) read(b[i]), a[i] = c[b[i]];
-		b[0] = 1, b[n + 1] = 1;
-		for (int i = 1; i <= n; ++i) b[i] = 0;
+    	10	b[0] = 1, b[n + 1] = 1;
+		fo不0\ \r     
+        (-int i = 1; i <= n; ++i) b[i] = 0;
 		for (int i = k; i > 0; --i) {
 			b[a[i]] = 1;
 			ans = (ans * (2 - b[a[i] + 1] - b[a[i] - 1])) % P;
