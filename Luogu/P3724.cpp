@@ -56,7 +56,8 @@ class RealHash {
 void bfs() {
     class node {
         public: int day, attack, level;
-        public: node(int day, int attack, int level): day(day), attack(attack), level(level) {}
+        public: node(int day, int attack, int level): 
+            day(day), attack(attack), level(level) {}
     };
     std::queue<node> q;
     q.emplace(1, 1, 0);
@@ -85,15 +86,14 @@ signed main() {
         }
     for (int i = 1; i <= n; ++i)
         for (int j = 1; j <= mc; ++j) cmax(day, f[i][j]);
-    bfs();
-    std::sort(atc + 1, atc + cnt + 1);
+    bfs(); std::sort(atc + 1, atc + cnt + 1);
     for (int i = 1; i <= m; ++i) {
         if (day >= c[i]) {puts("1"); continue;}
         bool flag = false; int min = 1e9;
         for (int j = cnt, k = 1; j >= 1; --j) {
             while (k < cnt && atc[j].x + atc[k].x <= c[i]) 
-                min = std::min(min, atc[k].y - atc[k].x), ++k;
-            if (min + c[i] - atc[j].x <= day - atc[j].y) {flag = true; break;}
+                 min = std::min(min, atc[k].y - atc[k].x), ++k;
+                      if (min + c[i] - atc[j].x <= day - atc[j].y) {flag = true; break;}
             if (atc[j].x <= c[i] && c[i] - atc[j].x <= day - atc[j].y) {flag = true; break;}
         } puts(flag ? "1" : "0");
     } 
